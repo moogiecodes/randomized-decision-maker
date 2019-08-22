@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset = "utf-8">
+    <title>Randomized Decision Maker</title>
+    <style type = "text/css">
+      html 				{font-family: "courier new";}
+      form 				{border: 1.5em solid black;
+        				 width: 30em;
+        				 height: auto;
+        				 text-align: center;
+        				 margin-left: auto;
+            			 margin-right: auto;
+            			 padding: 6em 3em;}
+      input[type=text]	{width: 23em;
+    				     margin: auto;
+   					   	 box-sizing: border-box;
+    				   	 border: 2px solid #ccc;
+    				   	 margin-bottom: 1.75em;
+    				   	 outline: none;}
+      #result 			{margin-left: auto;
+       		   			 margin-right: auto;
+       		   			 text-align: center;
+       		   			 padding: 3em 2em;}   
+      header 			{margin-left: auto;
+       		  			 margin-right: auto;
+       		  			 text-align: center;
+       		  			 padding: 3em 4em;}
+      h1				{margin-bottom: 1.5em;}
+      #resCS			{font-size: 0.7em;
+      					 margin-top: 3em;}
+      label 			{margin-right: 1em;}
+    </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  </head>
+  <body>
+    <header>
+    <h1>Randomized Decision Maker</h1>
+    <p>Instructions:<br> 
+    Input your choices and the generator will choose (1 choice) randomly for you!<br>
+    [Max of 10 options] 
+    </p>
+    </header>
+    <form method="post" action ="">
+      <div id="options">
+        <p id="choice1">
+          <label>Option:</label><input type="text" class="opt" maxlength="40"><br>
+        </p>
+        <p id="choice2">
+          <label>Option:</label><input type="text" class="opt" maxlength="40"><br>
+        </p>
+        <p id="choice3">
+          <label>Option:</label><input type="text" class="opt" maxlength="40"><br>
+        </p>
+      </div>
+      <input type="button" id="addbtn" value="Add Option">
+      <input type="button" id="removebtn" value="Remove Option"><br>
+      <input type="button" id="submit" value="Generate Choice">
+      <p id="resCS">Your result will appear below this box. </p>
+    </form>
+    <div id="result"></div>
+    <!-- Template of input box to add -->
+    <p id="addTemp" style="display:none">
+    <label>Option:</label><input type="text" id=""><br>
+    </p>
+  </body>
+
+  <script>
+  var currentNode; // stores the currently selected node
+  var idcount = 3; // used to number nodes for reference of adding/removal
+
+  // register event handlers and initialize currentNode
+  function start() {
+    document.getElementById("addbtn").addEventListener("click", addInput, false );
+    document.getElementById("removebtn").addEventListener("click", remove, false );
+    document.getElementById("submit").addEventListener("click", chooser, false );
+    //initialize current node
+    currentNode = document.getElementById("choice3");} // end function start
+  window.addEventListener("load", start, false);
+  
+   // append a paragraph node as the child of the current node
+   function addInput(){
+      if (idcount >= 10) {
+       alert("You have reached the maximum amount of options allowed."); 
+       return;
+       }
+     ++idcount;
+     var newInput = document.createElement("p"); 
+     newInput.innerHTML = document.getElementById('addTemp').innerHTML;
+     document.getElementById('options').appendChild(newInput);
+     newInput.children[1].classList.add("opt");
+     newInput.id = "choice" + idcount;
+     switchTo(newInput);
+     } //end addInput function 
+     
+   // remove the current node
+   function remove(){
+     if (idcount == 3) // want current node to be latest option that was created 
+       alert("Cannot remove.");
+     else {
+      var removeNode = document.getElementById('choice' + idcount);
+      removeNode.remove();
+      --idcount;
+     }
+   } // end function remove
+   
+   // helper function that switches to currentNode
+   function switchTo(newInput) {
+   currentNode = newInput;
+   } // end function switchTo
+   
+   //function to choose option randomly and print final choice
+   function chooser(){
+   var arrchoices = $("input.opt").map(function() { //jquery selector
+    return $(this).val();
+   }).get();
+   var finalChoice = arrchoices[Math.floor(Math.random()*arrchoices.length)];
+   document.getElementById("result").innerHTML = "<h2>Result: " + finalChoice + "</h2>";
+   } // end function chooser
+  </script>
+</html>
